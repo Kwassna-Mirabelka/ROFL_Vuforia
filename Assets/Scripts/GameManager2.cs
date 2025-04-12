@@ -232,7 +232,7 @@ public class GameManager2s : MonoBehaviour
                 success = ApplyAttack(chance, value);
                 break;
             case CardType.Heal:
-                success = ApplyHeal(chance, value);
+                success = ApplyHeal(chance, value, currentPlayerIndex);
                 break;
             case CardType.Jocker:
                 waitingForJokerChoice = true;
@@ -241,7 +241,7 @@ public class GameManager2s : MonoBehaviour
                 ShowJokerChoiceUI();
                 break;
             case CardType.Shield:
-                success = ApplyShield(chance, value);
+                success = ApplyShield(chance, value, currentPlayerIndex);
                 break;
             default:
                 success = false;
@@ -252,9 +252,9 @@ public class GameManager2s : MonoBehaviour
         AnimateAction(success);
     }
 
-    bool ApplyShield(int chance, int value)
+    bool ApplyShield(int chance, int value, int playerIndex)
     {
-        int targetPlayerIndex = currentPlayerIndex;
+        int targetPlayerIndex = playerIndex;
 
         if (playerShields[targetPlayerIndex] <= 0 || playerHPs[targetPlayerIndex] >= maxShield)
         {
@@ -298,9 +298,9 @@ public class GameManager2s : MonoBehaviour
         }
     }
 
-    bool ApplyHeal(int chance, int value)
+    bool ApplyHeal(int chance, int value, int playerIndex)
     {
-        int targetPlayerIndex = currentPlayerIndex;
+        int targetPlayerIndex = playerIndex;
 
         if (playerHPs[targetPlayerIndex] <= 0 || playerHPs[targetPlayerIndex] >= maxPlayerHP)
         {
@@ -357,7 +357,7 @@ public class GameManager2s : MonoBehaviour
         {
             int jokerHealChance = pendingCardChance;
             int jokerHealValue = pendingCardValue;
-            success = ApplyHeal(jokerHealChance, jokerHealValue);
+            success = ApplyHeal(jokerHealChance, jokerHealValue, currentPlayerIndex);
         }
 
         OnActionApplied?.Invoke(success);
