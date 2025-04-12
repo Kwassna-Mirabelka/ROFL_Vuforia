@@ -1,0 +1,38 @@
+{
+	"2" : {
+		"attack": 2,
+		"chance": 20
+	},
+	"3" : {
+		"attack": 3,
+		"chance": 30
+	},
+	"4" : {
+		"attack": 4,
+		"chance": 40
+	},
+	"5" : {
+		"attack": 5,
+		"chance": 50
+	},
+	"6" : {
+		"attack": 6,
+		"chance": 60
+	},
+	"7" : {
+		"attack": 7,
+		"chance": 70
+	},
+	"8" : {
+		"attack": 8,
+		"chance": 80
+	},
+	"9" : {
+		"attack": 9,
+		"chance": 90
+	},
+	"10" : {
+		"attack": 10,
+		"chance": 100
+	}
+}
