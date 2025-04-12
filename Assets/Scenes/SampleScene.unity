@@ -445,6 +445,97 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1209249660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1209249662}
+  - component: {fileID: 1209249661}
+  m_Layer: 0
+  m_Name: GameManager2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1209249661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209249660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 727f1e250ee4191498ccbda3e0177361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playersNum: 4
+  maxPlayerHP: 15
+  initialBossHP: 20
+  maxShield: 10
+  playerHPs: 
+  playerShields: 
+  BossHP: 20
+  currentPlayerIndex: 0
+  isPlayerTurn: 1
+  currentTurnState: 0
+  lastActionMissed: 0
+  OnPlayerTurnStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBossTurnStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerHPChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerShieldChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBossHPChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnVictory:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDefeat:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMiss:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWaitingForCard:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardScanned:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWaitingForConfirmation:
+    m_PersistentCalls:
+      m_Calls: []
+  OnActionApplied:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1209249662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209249660}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 365.43384, y: 221.75528, z: 39.50434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1547586051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -844,6 +935,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 542659049}
     m_Modifications:
+    - target: {fileID: 2685172138630616817, guid: 2b9e1d985477c724885e0ae3ce9a2496,
+        type: 3}
+      propertyPath: m_Value
+      value: 0.522
+      objectReference: {fileID: 0}
     - target: {fileID: 6823076274574234338, guid: 2b9e1d985477c724885e0ae3ce9a2496,
         type: 3}
       propertyPath: m_Name
@@ -979,3 +1075,4 @@ SceneRoots:
   - {fileID: 1691137545}
   - {fileID: 542659049}
   - {fileID: 84326267}
+  - {fileID: 1209249662}
