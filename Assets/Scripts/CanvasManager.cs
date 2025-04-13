@@ -27,7 +27,7 @@ public class CanvasManager : MonoBehaviour
     void ActivateBoss()
     {
         bossbar.SetActive(true);
-        bossstats.maxhp = 60;
+        bossstats.maxhp = gameman.initialBossHP;
         bossstats.hp = bossstats.maxhp;
     }
     // Update is called once per frame
@@ -35,5 +35,6 @@ public class CanvasManager : MonoBehaviour
     {
         for (int i = 0; i < gameman.playersNum; i++)
             stats[i].hp = gameman.playerHPs[i];
+        bossstats.hp = gameman.BossHP;
     }
 }

@@ -19,15 +19,6 @@ public enum ActionType
     Heal,
     Shield
 }
-
-
-public enum PlayerTurnState
-{
-    WaitingForCardScan,
-    WaitingForActionConfirm,
-}
-
-
 public class GameManager2s : MonoBehaviour
 {
     [Header("Game Setup")]
@@ -42,33 +33,17 @@ public class GameManager2s : MonoBehaviour
     public int BossHP;
     public int currentPlayerIndex = 0;
     public bool isPlayerTurn = true;
-    public PlayerTurnState currentTurnState;
-
-    [Header("Card Action State (Pending)")]
-    private CardType pendingCardType;
-    private int pendingCardChance;
-    private int pendingCardValue;
-    private bool cardIsPending = false;
-
-    [Header("Jocker State")]
-    private CardType jockerChosenMove;
-    private bool waitingForJokerChoice = false;
 
     [Header("Feedback")]
     public bool lastActionMissed = false;
 
     public UnityEvent<int> OnPlayerTurnStart;
     public UnityEvent OnBossTurnStart;
-    public UnityEvent<int, int> OnPlayerHPChange;
-    public UnityEvent<int, int> OnPlayerShieldChange;
     public UnityEvent<int> OnBossHPChange;
     public UnityEvent OnVictory;
     public UnityEvent OnDefeat;
     public UnityEvent<ActionType> OnMiss;
-    public UnityEvent OnWaitingForCard;
     public UnityEvent<CardType, int, int> OnCardScanned;
-    public UnityEvent OnWaitingForConfirmation;
-    public UnityEvent<bool> OnActionApplied;
 
 
     private System.Random rand = new System.Random();
@@ -85,40 +60,16 @@ public class GameManager2s : MonoBehaviour
         for (int i = 0; i < numberOfPlayers; i++)
         {
             playerHPs.Add(maxPlayerHP);
-            OnPlayerHPChange?.Invoke(i, maxPlayerHP);
         }
         for (int i = 0; i < numberOfPlayers; i++)
         {
             playerShields.Add(0);
-            OnPlayerShieldChange?.Invoke(i, 0);
         }
         BossHP = initialBossHP;
-        OnBossHPChange?.Invoke(BossHP);
 
         currentPlayerIndex = 0;
         isPlayerTurn = true;
-        waitingForJokerChoice = false;
         StartPlayerTurn(currentPlayerIndex);
-    }
-
-    void Update()
-    {
-
-        if (isPlayerTurn && currentTurnState == PlayerTurnState.WaitingForCardScan)
-        {
-            ReceiveCardData(CardType.Attack, 80, 5);
-        }
-        
-        if (isPlayerTurn && currentTurnState == PlayerTurnState.WaitingForActionConfirm)
-        {
-            ConfirmAction();
-        }
-
-        if (waitingForJokerChoice)
-        {
-            //Get Button Response 
-            ConfirmJokerChoice(CardType.Attack);
-        }
     }
 
 
@@ -141,21 +92,13 @@ public class GameManager2s : MonoBehaviour
 
         currentPlayerIndex = playerIndex;
         isPlayerTurn = true;
-        cardIsPending = false;
-        waitingForJokerChoice = false;
         lastActionMissed = false;
-        currentTurnState = PlayerTurnState.WaitingForCardScan;
-        OnPlayerTurnStart?.Invoke(currentPlayerIndex);
-        OnWaitingForCard?.Invoke();
     }
 
     void StartBossTurn()
     {
         isPlayerTurn = false;
-        cardIsPending = false;
-        waitingForJokerChoice = false;
         lastActionMissed = false;
-        OnBossTurnStart?.Invoke();
 
         BossMove();
 
@@ -181,47 +124,7 @@ public class GameManager2s : MonoBehaviour
         }
     }
 
-
-    public void ReceiveCardData(CardType type, int chance, int value)
-    {
-        if (!isPlayerTurn || currentTurnState != PlayerTurnState.WaitingForCardScan)
-        {
-            return;
-        }
-
-        pendingCardType = type;
-        pendingCardChance = chance;
-        pendingCardValue = value;
-        cardIsPending = true;
-        currentTurnState = PlayerTurnState.WaitingForActionConfirm;
-
-        OnCardScanned?.Invoke(type, chance, value);
-        OnWaitingForConfirmation?.Invoke();
-    }
-
-
-    public void ConfirmAction()
-    {
-        if (!isPlayerTurn || currentTurnState != PlayerTurnState.WaitingForActionConfirm || !cardIsPending)
-        {
-            return;
-        }
-
-        cardIsPending = false;
-
-        ApplyCardAction(pendingCardType, pendingCardChance, pendingCardValue);
-
-        if (!waitingForJokerChoice)
-        {
-            if (!CheckForGameOver())
-            {
-                NextTurn();
-            }
-        }
-    }
-
-
-    void ApplyCardAction(CardType type, int chance, int value)
+    void ApplyCardAction(CardType type, int chance, int value, int target)
     {
         lastActionMissed = false;
         bool success = false;
@@ -232,26 +135,18 @@ public class GameManager2s : MonoBehaviour
                 success = ApplyAttack(chance, value);
                 break;
             case CardType.Heal:
-                success = ApplyHeal(chance, value);
-                break;
-            case CardType.Jocker:
-                waitingForJokerChoice = true;
-                pendingCardChance = chance;
-                pendingCardValue = value;
-                ShowJokerChoiceUI();
+                success = ApplyHeal(chance, value, target);
                 break;
             case CardType.Shield:
-                success = ApplyShield(chance, value);
+                //success = ApplyShield(chance, value);
                 break;
             default:
                 success = false;
                 break;
         }
 
-        OnActionApplied?.Invoke(success);
-        AnimateAction(success);
     }
-
+    /*
     bool ApplyShield(int chance, int value)
     {
         int targetPlayerIndex = currentPlayerIndex;
@@ -282,6 +177,7 @@ public class GameManager2s : MonoBehaviour
             return false;
         }
     }
+    */
         bool ApplyAttack(int chance, int value)
     {
         if (rand.Next(101) <= chance)
@@ -298,14 +194,12 @@ public class GameManager2s : MonoBehaviour
         }
     }
 
-    bool ApplyHeal(int chance, int value)
+    bool ApplyHeal(int chance, int value, int target)
     {
-        int targetPlayerIndex = currentPlayerIndex;
+        int targetPlayerIndex = target;
 
         if (playerHPs[targetPlayerIndex] <= 0 || playerHPs[targetPlayerIndex] >= maxPlayerHP)
         {
-            OnActionApplied?.Invoke(true);
-            AnimateAction(true);
             return true;
         }
 
@@ -317,7 +211,6 @@ public class GameManager2s : MonoBehaviour
             if (actualHeal > 0)
             {
                 playerHPs[targetPlayerIndex] += actualHeal;
-                OnPlayerHPChange?.Invoke(targetPlayerIndex, playerHPs[targetPlayerIndex]);
             }
 
             return true;
@@ -328,47 +221,6 @@ public class GameManager2s : MonoBehaviour
             return false;
         }
     }
-
-
-    void ShowJokerChoiceUI()
-    {
-        Debug.Log("IMPLEMENT UI: Show Joker Choice (Attack/Heal/Shield)");
-    }
-
-
-    void ConfirmJokerChoice(CardType choice)
-    {
-        if (!waitingForJokerChoice)
-        {
-            return;
-        }
-
-        waitingForJokerChoice = false;
-
-
-        bool success = false;
-        if (choice == CardType.Attack)
-        {
-            int jokerAttackChance = pendingCardChance;
-            int jokerAttackValue = pendingCardValue;
-            success = ApplyAttack(jokerAttackChance, jokerAttackValue);
-        }
-        else if (choice == CardType.Heal)
-        {
-            int jokerHealChance = pendingCardChance;
-            int jokerHealValue = pendingCardValue;
-            success = ApplyHeal(jokerHealChance, jokerHealValue);
-        }
-
-        OnActionApplied?.Invoke(success);
-        AnimateAction(success);
-
-        if (!CheckForGameOver())
-        {
-            NextTurn();
-        }
-    }
-
 
     void BossMove()
     {
@@ -420,7 +272,6 @@ public class GameManager2s : MonoBehaviour
                         playerShields[playerIndex] = 0;
                         playerHPs[playerIndex] -= dmg;
                         playerHPs[playerIndex] = Mathf.Max(0, playerHPs[playerIndex]);
-                        OnPlayerHPChange?.Invoke(playerIndex, playerHPs[playerIndex]);
                     }
 
                 }
@@ -428,7 +279,6 @@ public class GameManager2s : MonoBehaviour
                 {
                     playerHPs[playerIndex] -= dmg;
                     playerHPs[playerIndex] = Mathf.Max(0, playerHPs[playerIndex]);
-                    OnPlayerHPChange?.Invoke(playerIndex, playerHPs[playerIndex]);
                 }
                 
             
@@ -516,33 +366,5 @@ public class GameManager2s : MonoBehaviour
 
         int randomIndexInList = rand.Next(livingPlayerIndices.Count);
         return livingPlayerIndices[randomIndexInList];
-    }
-
-
-    int SelectPlayerToHeal()
-    {
-        List<int> healablePlayerIndices = new List<int>();
-        for (int i = 0; i < playerHPs.Count; i++)
-        {
-            if (playerHPs[i] > 0 && playerHPs[i] < maxPlayerHP)
-            {
-                healablePlayerIndices.Add(i);
-            }
-        }
-        if (healablePlayerIndices.Count == 0) return -1;
-        if (healablePlayerIndices.Contains(currentPlayerIndex)) return currentPlayerIndex;
-        return healablePlayerIndices[rand.Next(healablePlayerIndices.Count)];
-    }
-
-    void AnimateAction(bool success)
-    {
-        if (!success || lastActionMissed)
-        {
-
-        }
-        else
-        {
-
-        }
     }
 }
