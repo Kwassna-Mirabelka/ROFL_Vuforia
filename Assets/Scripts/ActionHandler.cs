@@ -10,11 +10,32 @@ public struct cardstats
 }
 public class ActionHandler : MonoBehaviour
 {
+    Animator buttanimator;
+
+    public GameObject atkbutton;
+    public GameObject healbutton;
+    public GameObject shieldbutton;
     public List<cardstats> cardtypes = new List<cardstats>();
     public string Actiontype;
-    void ParseAction(string actcard, string chcard, string vcard)
+    public string Actionchance;
+    public string Actionvalue;
+    void Start()
     {
-        
+        buttanimator = GameObject.Find("CastButtons").GetComponent<Animator>();
+        SetRune("K","0","0");
     }
+    void SetRune(string actcard, string chcard, string vcard)
+    {
+        Actionchance = actcard;
+        Actionchance = chcard;
+        Actionvalue = vcard;
+        if (actcard == "0")
+        {
+            buttanimator.SetInteger("State", 0);
+        } 
+
+    }
+
+    
 
 }

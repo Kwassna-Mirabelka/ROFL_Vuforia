@@ -413,7 +413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &134780088
 RectTransform:
   m_ObjectHideFlags: 0
@@ -431,9 +431,9 @@ RectTransform:
   - {fileID: 1370583700}
   m_Father: {fileID: 1622872361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 574}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &134780089
@@ -1829,18 +1829,11 @@ MonoBehaviour:
   BossHP: 20
   currentPlayerIndex: 0
   isPlayerTurn: 1
-  currentTurnState: 0
   lastActionMissed: 0
   OnPlayerTurnStart:
     m_PersistentCalls:
       m_Calls: []
   OnBossTurnStart:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPlayerHPChange:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPlayerShieldChange:
     m_PersistentCalls:
       m_Calls: []
   OnBossHPChange:
@@ -1855,16 +1848,7 @@ MonoBehaviour:
   OnMiss:
     m_PersistentCalls:
       m_Calls: []
-  OnWaitingForCard:
-    m_PersistentCalls:
-      m_Calls: []
   OnCardScanned:
-    m_PersistentCalls:
-      m_Calls: []
-  OnWaitingForConfirmation:
-    m_PersistentCalls:
-      m_Calls: []
-  OnActionApplied:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &1209249662
