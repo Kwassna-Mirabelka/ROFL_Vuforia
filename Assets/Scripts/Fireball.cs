@@ -3,6 +3,7 @@ using UnityEngine;
 public class Fireball : MonoBehaviour
 {
     public GameObject explosionvfx;
+    public GameObject splatter;
     public string bossname;
     public float startimpulse;
     public float speed;
@@ -20,9 +21,10 @@ public class Fireball : MonoBehaviour
     {
         rb.linearVelocity += speed * Time.deltaTime * timealive * (target.position - transform.position).normalized;
         timealive += Time.deltaTime;
-        if (timealive > 2 || (target.position - transform.position).sqrMagnitude < 0.1)
+        if (timealive > 2 || (target.position - transform.position).sqrMagnitude < 0.1f)
         {
             Instantiate(explosionvfx,transform.position,Quaternion.identity);
+            Instantiate(splatter,target.position,Quaternion.identity);
             Destroy(gameObject);
         }            
     }

@@ -21,6 +21,7 @@ public enum ActionType
 }
 public class GameManager2s : MonoBehaviour
 {
+    public RuneConnectionManager RuneConnect;
     [Header("Game Setup")]
     public int playersNum = 4;
     public int maxPlayerHP = 15;
@@ -157,8 +158,11 @@ public class GameManager2s : MonoBehaviour
     */
     public void ApplyAttack()
     {
+        RuneConnect.FireFireball();
         int value = GetComponent<ActionHandler>().Actionvalue;
         int chance = GetComponent<ActionHandler>().Actionchance;
+        value = 5;
+        chance = 100;
         if (rand.Next(101) <= chance)
         {
             BossHP -= value;
