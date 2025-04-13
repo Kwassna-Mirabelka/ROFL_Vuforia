@@ -5,7 +5,8 @@ using Vuforia;
 public class RuneConnectionManager : MonoBehaviour
 {
 
-    
+    public ActionHandler actionHandler;
+    public GameObject GameManager;
 
     public GameObject[] runyLiczby;
     public GameObject[] runyZnaki;
@@ -43,6 +44,9 @@ public class RuneConnectionManager : MonoBehaviour
     int minIndexWartosc = -1;
     void Update()
     {
+        minIndexZnak = -1;
+        minIndexSzansa =-1;
+        minIndexWartosc = -1;
         for(int i=0; i < areActiveLiczby.Length; i++)
         {
             if (runyLiczby[i].GetComponentInChildren<Renderer>().enabled)
@@ -96,7 +100,7 @@ public class RuneConnectionManager : MonoBehaviour
 
         if(minIndexSzansa == -1 || minIndexZnak==-1)
         {
-            //sendZeroes
+            actionHandler.SetRune('0','0','0');
             return;
         }
 
@@ -124,14 +128,15 @@ public class RuneConnectionManager : MonoBehaviour
         }
         if (minIndexWartosc == -1)
         {
-            //sendZeroes
+            actionHandler.SetRune('1','1','1');
             return;
         }
 
         string figura = runyZnaki[minIndexZnak].GetComponent<ImageTargetBehaviour>().TargetName;
         string szansa = runyLiczby[minIndexSzansa].GetComponent<ImageTargetBehaviour>().TargetName;
         string wartosc = runyLiczby[minIndexWartosc].GetComponent<ImageTargetBehaviour>().TargetName;
-        Debug.Log(figura + " " + szansa + " " + wartosc+" elo") ;
+        actionHandler.SetRune(figura[0], szansa[0], wartosc[0]);
+        
 
     }
 }

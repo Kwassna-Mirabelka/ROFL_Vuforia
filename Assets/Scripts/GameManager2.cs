@@ -123,29 +123,6 @@ public class GameManager2s : MonoBehaviour
             }
         }
     }
-
-    void ApplyCardAction(CardType type, int chance, int value, int target)
-    {
-        lastActionMissed = false;
-        bool success = false;
-
-        switch (type)
-        {
-            case CardType.Attack:
-                success = ApplyAttack(chance, value);
-                break;
-            case CardType.Heal:
-                success = ApplyHeal(chance, value, target);
-                break;
-            case CardType.Shield:
-                //success = ApplyShield(chance, value);
-                break;
-            default:
-                success = false;
-                break;
-        }
-
-    }
     /*
     bool ApplyShield(int chance, int value)
     {
@@ -178,23 +155,22 @@ public class GameManager2s : MonoBehaviour
         }
     }
     */
-        bool ApplyAttack(int chance, int value)
+    public void ApplyAttack()
     {
+        int value = GetComponent<ActionHandler>().Actionvalue;
+        int chance = GetComponent<ActionHandler>().Actionchance;
         if (rand.Next(101) <= chance)
         {
             BossHP -= value;
             BossHP = Mathf.Max(0, BossHP);
-            OnBossHPChange?.Invoke(BossHP);
-            return true;
         }
         else
         {
             Miss(ActionType.PlayerAttack);
-            return false;
         }
     }
 
-    bool ApplyHeal(int chance, int value, int target)
+    public bool ApplyHeal(int chance, int value, int target)
     {
         int targetPlayerIndex = target;
 
